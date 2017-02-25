@@ -27,13 +27,29 @@ io.on('connection', (socket) => {
    socket.on('disconnect', () => {
       console.log('User was disconnected');
    });
-   socket.emit("newMessage", {
-      from: "me",
-      text: "hi, I'm fine",
-      createdAt: 100
+
+   socket.on('createMessage', (message) => {
+      console.log('createMessage', message);
+      io.emit('newMessage', {
+         from: message.from,
+         text: message.text,
+         createdAt: new Date().getTime()
+      });
+      // socket.broadcast.emit('newMessage', {
+      //   from: message.from,
+      //   text: message.text,
+      //   createdAt: new Date().getTime()
+      // });
    });
-   socket.on("createMessage", (message) => {
-      console.log(message);
+   socket.emit('newMessage', {
+      from: "Admin",
+      text: "welcome to chat",
+      createdAt: new Date().getTime()
+   });
+   socket.broadcast.emit('newMessage', {
+      from: "Admin",
+      text: "New user joined",
+      createdAt: new Date().getTime()
    });
 });
 
